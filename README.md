@@ -1,2 +1,58 @@
-# hbu-information-deal
-Household Economic Status Statistics
+# Information Deal
+
+本仓库包含一个 R 函数 `informaion_deal`，用于从指定文件夹内的 `.docx` 文件提取家庭信息并生成汇总 Excel 表格。该函数适用于社会调查、家庭信息收集等场景。
+
+---
+
+## 功能说明
+
+- 读取指定目录下的 `.docx` 文件（仅限该目录内包含的 docx 文件）
+- 提取以下信息：
+  - 姓名、性别、年龄
+  - 家庭人口数、独生子女情况、务农人数
+  - 失业人数、伤残人数
+  - 家庭人均年收入、负债金额
+- 根据用户参数，可统计伤残人数的不同标准（`disability` 或 `level`）
+- 支持输出 Excel 表格，覆盖上次运行结果
+
+---
+
+## 参数说明
+
+| 参数       | 类型       | 说明 |
+|------------|-----------|------|
+| `dir`      | 字符串     | docx 文件所在目录（目录中只能包含 docx 文件） |
+| `year`     | 数值       | 当前年份，用于计算年龄 |
+| `disabled` | 字符串     | 统计伤残人数的方式，默认为 `"disability"`；`"level"` 表示统计非良好健康状况 |
+| `output`   | 逻辑值     | 是否输出 Excel 文件，默认 `TRUE` |
+
+---
+
+## 使用方法
+
+```r
+# 安装依赖包
+install.packages(c("openxlsx", "readtext"))
+
+# 加载函数（假设函数保存在 informaion_deal.R）
+source("informaion_deal.R")
+
+# 执行函数
+result <- informaion_deal(
+  dir = "D:/Rwork/R.4.2.0/information",
+  year = 2025,
+  disabled = "disability",
+  output = TRUE
+)
+
+```
+
+---
+
+## 注意事项
+
+-使用前，请关闭文件所在地址内的所有 docx 文件。
+-此函数若被允许输出，则只输出一个 excel 文件，并且可以覆盖上一次运行所输出的文件。
+-关于失业人数，此函数只访问职业是否为无，不考虑务农是否属于失业。
+-关于伤残人数，为了方便此函数的工作，建议 docx 文件中健康状况填写健康、患病、伤残或残疾。
+-对于负债金额，建议填写负债总共金额，不要详细填写，不要添加负号，不要使用科学计数法、小数或添加空格
